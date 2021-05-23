@@ -16,12 +16,14 @@ certifi==2020.12.5
     # via requests
 chardet==4.0.0
     # via requests
-click==8.0.0
+click==8.0.1
     # via
     #   black
     #   safety
 cloudpickle==1.6.0
     # via gym
+coverage==5.5
+    # via -r requirements/dev.in
 cycler==0.10.0
     # via matplotlib
 dparse==0.5.1
