@@ -1,10 +1,9 @@
-name: Python application
+name: Continuous Integration
 
 on:
   push:
     branches:
       - main
-      - feature/ci-workflow
   pull_request:
     branches:
       - main
