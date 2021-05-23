@@ -23,7 +23,7 @@ jobs:
     - name: Install code quality dependencies
       run: |
         python -m pip install --upgrade pip setuptools wheel
-        pip install requirements/requirements.txt
+        pip install -r requirements/requirements.txt
     - name: Run unit tests
       run: |
         pytest
