@@ -1,0 +1,52 @@
+# Configuration files
+*.env
+.env
+
+# IDE generated
+.vscode/*
+!.vscode/settings-default.json
+!.vscode/tasks-default.json
+!.vscode/launch-default.json
+!.vscode/extensions-default.json
+
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging related
+venv/
+env/
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+.pytest_cache
+
+# Joblib files
+*.joblib
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
