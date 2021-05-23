@@ -1,0 +1,4 @@
+[bandit]
+exclude = .git,venv,tests
+recursive = true
+targets = gym_bhsl
