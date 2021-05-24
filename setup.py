@@ -1,3 +1,3 @@
 from setuptools import setup
 
-setup(name="gym_buy_high_sell_low", install_requires=["gym", "numpy"])
+setup(name="gym-buy-high-sell-low", install_requires=["gym", "numpy"])
