@@ -109,6 +109,6 @@ jobs:
       run: |
         python -m pip install dist/*.whl
 
-    - name: Import Package
+    - name: Import Package and Create an Environment
       run: |
-        python -c "import gym; import gym_bhsl; _ = gym.make('buy-high-sell-low-v0')"
+        python -c "import gym; import gym_bhsl; env = gym.make('buy-high-sell-low-v0'); env.render()"
