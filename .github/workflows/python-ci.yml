@@ -111,4 +111,4 @@ jobs:
 
     - name: Import Package and Create an Environment
       run: |
-        python -c "import gym; import gym_bhsl; env = gym.make('buy-high-sell-low-v0'); env.render()"
+        python -c "import gym; import gym_bhsl; env = gym.make('buy-high-sell-low-v0'); print(env.render())"
