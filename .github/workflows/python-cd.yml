@@ -27,11 +27,12 @@ jobs:
       run: |
         python -m build
 
-    - name: Archive artifacts
+    - name: Store Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: python-packages
         path: dist
+        if-no-files-found: error
         retention-days: 1
 
 
@@ -44,12 +45,13 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: python-packages
+        path: dist
 
     - name: Create a GitHub Release
       id: create-release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/*.*"
+        artifacts: "dist/*"
         token: ${{ secrets.GITHUB_TOKEN }}
 
 
@@ -62,6 +64,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: python-packages
+        path: dist
 
     - name: Display package files
       run: ls -lah
