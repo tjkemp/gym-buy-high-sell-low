@@ -72,7 +72,7 @@ jobs:
     - name: Store Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ci-artifacts
+        name: python-packages
         path: dist/*.whl
         if-no-files-found: warn
         retention-days: 1
