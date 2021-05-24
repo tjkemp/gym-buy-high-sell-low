@@ -1,5 +1,8 @@
-flake8
 black
-pytest
-isort
+build
 coverage
+flake8
+isort
+pip-tools
+pytest
+twine

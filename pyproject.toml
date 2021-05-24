@@ -7,3 +7,12 @@ addopts = "-ra -q"
 testpaths = [
     "tests",
 ]
+
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "gym",
+    "numpy"
+]
+build-backend = "setuptools.build_meta"
