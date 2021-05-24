@@ -66,10 +66,6 @@ jobs:
         name: python-packages
         path: dist
 
-    - name: Display Package Files
-      run: ls -lah
-      working-directory: dist
-
     - name: Publish Package to Python Package Index
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
