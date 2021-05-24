@@ -1,7 +1,7 @@
 # Gym Buy High Sell Low
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gym-buy-high-sell-low)
 ![License](https://img.shields.io/github/license/tjkemp/gym-buy-high-sell-low)
-![GitHub repo size](https://img.shields.io/github/repo-size/tjkemp/gym-buy-high-sell-low)
 ![GitHub last commit](https://img.shields.io/github/last-commit/tjkemp/gym-buy-high-sell-low)
 
 Gym Buy High Sell Low is an OpenAI Gym simulated stock market environment that allows using it to train agents to do favorable trades. Please, don't use this for serious purposes. The goal for this project is personal learning.
