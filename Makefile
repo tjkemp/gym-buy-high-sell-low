@@ -11,7 +11,7 @@ qa-extended: qa
 
 .PHONY: update-pip
 update-pip:
-	@python -m pip install --upgrade pip
+	@python -m pip install --upgrade pip setuptools wheel
 
 .PHONY: update-deps
 update-deps: update-pip
