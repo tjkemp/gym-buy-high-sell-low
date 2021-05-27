@@ -24,8 +24,14 @@ build: qa
 	@python -m build
 
 .PHONY: upload-test
-upload: build
+upload-test: build
 	@python -m twine upload --repository testpypi dist/*
+
+.PHONY: release-prod
+release-prod:
+	@python -c "import gym_bhsl as bhsl; print('Check the version is correct: ', bhsl.__VERSION__, '- and tag it to create a release.')"
+	@echo "git tag <tag_name> -m '<message>'"
+	@echo "git push origin <tag_name>"
 
 .PHONY: clean
 clean:
