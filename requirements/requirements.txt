@@ -38,7 +38,9 @@ coverage==5.5
 cryptography==3.4.7
     # via secretstorage
 docutils==0.17.1
-    # via readme-renderer
+    # via
+    #   pyroma
+    #   readme-renderer
 dparse==0.5.1
     # via safety
 flake8-bugbear==21.4.3
@@ -112,9 +114,13 @@ pyflakes==2.3.1
 pyglet==1.5.15
     # via gym
 pygments==2.9.0
-    # via readme-renderer
+    # via
+    #   pyroma
+    #   readme-renderer
 pyparsing==2.4.7
     # via packaging
+pyroma==3.1
+    # via -r requirements/dev.in
 pytest==6.2.4
     # via -r requirements/dev.in
 pyyaml==5.4.1
