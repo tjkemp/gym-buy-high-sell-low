@@ -16,3 +16,6 @@ requires = [
     "numpy"
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+source = ['gym_bhsl']

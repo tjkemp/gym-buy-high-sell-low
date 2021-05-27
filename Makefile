@@ -1,12 +1,13 @@
 .PHONY: qa
 qa:
 	@pre-commit run --all-files
-	@pytest
-	# @bandit --ini .bandit
+	@coverage run -m pytest
 
-.PHONY: coverage
-coverage:
+.PHONY: qa-extended
+qa-extended: qa
 	@coverage report -m
+	@pyroma .
+	@bandit --exit-zero --ini .bandit
 
 .PHONY: update-pip
 update-pip:
@@ -29,14 +30,14 @@ upload-test: build
 
 .PHONY: release-prod
 release-prod:
-	@python -c "import gym_bhsl as bhsl; print('Check the version is correct: ', bhsl.__VERSION__, '- and tag it to create a release.')"
+	@python -c "import gym_bhsl as bhsl; print('Check the version is correct: ', bhsl.__VERSION__, '- and tag to create a release.')"
 	@echo "git tag <tag_name> -m '<message>'"
 	@echo "git push origin <tag_name>"
 
 .PHONY: clean
 clean:
-	@coverage erase
 	@py3clean .
+	@coverage erase
 	@rm -r .pytest_cache
 	@rm -rf build
 	@rm -rf dist
