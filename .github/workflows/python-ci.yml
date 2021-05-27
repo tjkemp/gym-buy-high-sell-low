@@ -11,7 +11,7 @@ on:
 
 jobs:
   qa-test:
-    name: Run Unit Tests, Linter and Formatter
+    name: Run Quality Assurance
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -97,7 +97,6 @@ jobs:
     - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip setuptools wheel
-        pip install gym numpy
 
     - name: Download Artifacts
       uses: actions/download-artifact@v2
