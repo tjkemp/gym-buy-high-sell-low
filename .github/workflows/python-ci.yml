@@ -3,35 +3,111 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - main
+      - feature/**
+      - fix/**
   pull_request:
     branches:
       - main
 
 jobs:
-  build:
-
+  qa-test:
+    name: Run Quality Assurance
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set Up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
-    - name: Install code quality dependencies
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements/requirements.txt
-    - name: Run unit tests
+
+    - name: Run Unit Tests
       run: |
         pytest
+
     - name: Run flake8
       run: |
         flake8 . --statistics
+
     - name: Run black
       run: |
         black . --check
+
     - name: Run isort
       run: |
         isort . --check
+
+
+  build-test:
+    name: Test Building Python Package
+    needs: qa-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set Up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install build
+
+    - name: Build Python Wheels
+      run: |
+        python -m build
+
+    - name: Store Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: python-packages
+        path: dist/*.whl
+        if-no-files-found: warn
+        retention-days: 1
+
+
+  install-test:
+    name: Test Installing Python Package
+    needs: build-test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set Up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: python-packages
+        path: dist
+
+    - name: Install Package
+      run: |
+        python -m pip install dist/*.whl
+
+    - name: Import Package and Create an Environment
+      run: |
+        python -c "import gym; import gym_bhsl; env = gym.make('buy-high-sell-low-v0'); print(env.render())"
