@@ -12,6 +12,7 @@ on:
 jobs:
   qa-test:
     name: Run Quality Assurance
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,6 +50,7 @@ jobs:
 
   build-test:
     name: Test Building Python Package
+    if: github.event_name == 'pull_request'
     needs: qa-test
     runs-on: ubuntu-latest
     steps:
@@ -80,6 +82,7 @@ jobs:
 
   install-test:
     name: Test Installing Python Package
+    if: github.event_name == 'pull_request'
     needs: build-test
     runs-on: ubuntu-latest
     strategy:
