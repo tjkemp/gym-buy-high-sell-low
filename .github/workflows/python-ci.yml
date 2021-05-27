@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -53,7 +52,6 @@ jobs:
     needs: qa-test
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout Repository
       uses: actions/checkout@v2
 
@@ -84,15 +82,17 @@ jobs:
     name: Test Installing Python Package
     needs: build-test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
     steps:
-
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set Up Python
+    - name: Set Up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: '3.9'
+        python-version: ${{ matrix.python-version }}
 
     - name: Install Python Dependencies
       run: |
