@@ -1,6 +1,6 @@
 import pytest
 
-from gym_bhsl.envs.noise import OUNoise
+from gym_bhsl.math.noise import OUNoise
 
 
 def test_object_creation():
