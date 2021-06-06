@@ -17,6 +17,10 @@ class Action(Enum):
     SELL = 2
 
 
+class BuyHighSellLowError(Exception):
+    pass
+
+
 class BuyHighSellLow(gym.Env):
 
     metadata = {"render.modes": ["human"]}
@@ -69,7 +73,9 @@ class BuyHighSellLow(gym.Env):
         """
 
         if not self.action_space.contains(action):
-            raise error.InvalidAction()
+            raise BuyHighSellLowError(
+                f"Invalid Action, step() received action: {action}"
+            )
 
         self._timestep += 1
         current_price = max(self._noise.sample(), 0)
@@ -131,10 +137,11 @@ class BuyHighSellLow(gym.Env):
         else:
             bought_at = 0.0
         state = ([bought_at], list(self._stock_prices))
-        assert self.observation_space.contains(state), (
-            "The state is not within the observations space, "
-            "try adjusting noise hyperparameters"
-        )
+        if not self.observation_space.contains(state):
+            raise BuyHighSellLowError(
+                "The state is not within the observations space, "
+                "try adjusting noise hyperparameters"
+            )
         return (state, self._prev_reward, False, {})
 
     def _rolling_average(self, days: int = 90) -> float:
