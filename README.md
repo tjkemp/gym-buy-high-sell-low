@@ -29,7 +29,7 @@ To use the project, follow these steps:
 ```
 > import gym
 > import gym_bhsl
-> env = gym.make('gym-buy-high-sell-low-v0')
+> env = gym.make('buy-high-sell-low-v0')
 > env.reset()
 > env.render()
 0. 90d avg: 9.224 7d avg: 8.857. No stocks. Current price 8.192.
