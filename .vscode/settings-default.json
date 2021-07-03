@@ -18,6 +18,10 @@
         },
         "**/__pycache__": true,
         "**/.*_cache": true,
-        "venv": true
-    }
+        "venv": true,
+        "*.egg-info": true,
+        ".coverage": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true
 }
