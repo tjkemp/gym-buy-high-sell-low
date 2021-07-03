@@ -20,7 +20,8 @@
         "**/.*_cache": true,
         "venv": true,
         "*.egg-info": true,
-        ".coverage": true
+        ".coverage": true,
+        "build": true
     },
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true
