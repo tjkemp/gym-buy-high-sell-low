@@ -2,10 +2,10 @@
 qa:
 	@pre-commit run --all-files
 	@coverage run -m pytest
+	@coverage report -m
 
 .PHONY: qa-extended
 qa-extended: qa
-	@coverage report -m
 	@pyroma .
 	@bandit --exit-zero --ini .bandit
 
