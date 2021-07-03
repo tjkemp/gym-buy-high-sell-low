@@ -1,5 +1,4 @@
 """A simple stock market simulator as an OpenAI gym environment."""
-import itertools
 from collections import deque
 from enum import Enum
 from typing import Tuple
@@ -8,6 +7,7 @@ import gym
 from gym import error, spaces
 from gym.utils import seeding
 
+from gym_bhsl.math.average import right_average
 from gym_bhsl.math.noise import OUNoise
 
 
@@ -111,8 +111,9 @@ class BuyHighSellLow(gym.Env):
         texts = []
         texts.append(f"{self._timestep}.")
         texts.append(
-            f"90d avg: {self._rolling_average(90):.3f} "
-            f"7d avg: {self._rolling_average(7):.3f}."
+            f"90d avg: {right_average(self._stock_prices, 90):.3f} "
+            f"30d avg: {right_average(self._stock_prices, 30):.3f} "
+            f"7d avg: {right_average(self._stock_prices, 7):.3f} "
         )
         if self._bought_at is not None:
             texts.append(f"Bought at {self._bought_at:.3f}.")
@@ -143,11 +144,3 @@ class BuyHighSellLow(gym.Env):
                 "try adjusting noise hyperparameters"
             )
         return (state, self._prev_reward, False, {})
-
-    def _rolling_average(self, days: int = 90) -> float:
-        """Calculate stock prices rolling average of n days."""
-
-        q = self._stock_prices
-        if not 0 < days <= len(q):
-            raise ValueError("Invalid value for rolling average")
-        return sum(itertools.islice(q, len(q) - days, len(q))) / days

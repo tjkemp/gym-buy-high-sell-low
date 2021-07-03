@@ -1,10 +1,12 @@
 import itertools
-from typing import List, Union
+from typing import List, Sequence, Union
 
 import numpy as np
 
 
-def moving_average(values: Union[List[float], List[int]], window: int) -> List[float]:
+def moving_average(
+    values: Union[Sequence[float], Sequence[int]], window: int
+) -> List[float]:
     """Calculate moving average.
 
     Args:
@@ -25,9 +27,11 @@ def moving_average(values: Union[List[float], List[int]], window: int) -> List[f
     return average.tolist()
 
 
-def right_average(values: list, num: int) -> float:
-    """Calculate average of `num` rightmost values in a list."""
-    if not 0 < num <= len(values):
-        raise ValueError(f"Invalid value for average: {num}")
-    # return sum(values[len(values)-num:]) / num
-    return sum(itertools.islice(values, len(values) - num, len(values))) / num
+def right_average(values: Sequence[float], num_items: int) -> float:
+    """Calculate average of `num_items` rightmost values in a sequence."""
+    if not 0 < num_items <= len(values):
+        raise ValueError(f"Invalid value for average: {num_items}")
+    # return sum(values[len(values) - num_items :]) / num_items
+    return (
+        sum(itertools.islice(values, len(values) - num_items, len(values))) / num_items
+    )
