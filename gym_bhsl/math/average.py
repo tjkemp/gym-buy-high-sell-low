@@ -31,7 +31,6 @@ def right_average(values: Sequence[float], num_items: int) -> float:
     """Calculate average of `num_items` rightmost values in a sequence."""
     if not 0 < num_items <= len(values):
         raise ValueError(f"Invalid value for average: {num_items}")
-    # return sum(values[len(values) - num_items :]) / num_items
     return (
         sum(itertools.islice(values, len(values) - num_items, len(values))) / num_items
     )
