@@ -51,3 +51,6 @@ coverage.xml
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
 notebooks/
+
+# Personal notes
+TODO.txt
