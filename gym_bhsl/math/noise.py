@@ -8,9 +8,10 @@ class OUNoise:
         """Initialize the process.
 
         Args:
-            mu: the mean of samples.
-            theta: the amount of randomness regard to previous sample.
-            sigma: the "amplitude", values will be roughly [-6*sigma, 6*sigma].
+            mu: the equilibrium (the mean of the gaussian noise).
+            theta: the decay rate of the noise (the amount of randomness regard to
+                previous sample).
+            sigma: the volatility, values will be roughly [-6*sigma, 6*sigma].
 
         """
         self.mu = mu
