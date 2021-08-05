@@ -2,10 +2,10 @@
 qa:
 	@pre-commit run --all-files
 	@coverage run -m pytest
+	@coverage report -m
 
 .PHONY: qa-extended
 qa-extended: qa
-	@coverage report -m
 	@pyroma .
 	@bandit --exit-zero --ini .bandit
 
@@ -41,3 +41,4 @@ clean:
 	@rm -r .pytest_cache
 	@rm -rf build
 	@rm -rf dist
+	@rm -rf `find -type d -name .ipynb_checkpoints -not -path "./venv/*"`

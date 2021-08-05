@@ -1,14 +1,13 @@
 """A simple stock market simulator as an OpenAI gym environment."""
-import itertools
 from collections import deque
 from enum import Enum
 from typing import Tuple
 
 import gym
 from gym import error, spaces
-from gym.utils import seeding
 
-from gym_bhsl.envs.noise import OUNoise
+from gym_bhsl.math.average import right_average
+from gym_bhsl.math.noise import OUNoise
 
 
 class Action(Enum):
@@ -17,24 +16,36 @@ class Action(Enum):
     SELL = 2
 
 
+class BuyHighSellLowError(Exception):
+    pass
+
+
 class BuyHighSellLow(gym.Env):
 
     metadata = {"render.modes": ["human"]}
 
-    def __init__(self):
+    def __init__(
+        self,
+        mean: float = 10.0,
+        decay: float = 0.05,
+        volatility: float = 0.5,
+        fee: float = 0.0,
+    ):
         """The main class implementing a stock market simulator.
 
         The main API methods that users of this class need to know are:
-        step
-        reset
-        render
-        close
-        seed
+        step, reset, render, close, seed
 
         And set the following attributes:
         action_space: The Space object corresponding to valid actions.
         observation_space: The Space object corresponding to valid observations.
         reward_range: A tuple corresponding to the min and max possible rewards.
+
+        Args:
+            mean: the mean of the stock market.
+            decay: the decay rate of market shocks reverting to the mean.
+            volatility: volatility of the stock market.
+            fee: the transaction fee.
 
         """
         super().__init__()
@@ -47,9 +58,22 @@ class BuyHighSellLow(gym.Env):
         )
         self.action_space = spaces.Discrete(3)
 
-        self._mu, self._theta, self._sigma = 10.0, 0.05, 0.5
+        self._mu, self._theta, self._sigma = mean, decay, volatility
         self._noise = OUNoise(self._mu, self._theta, self._sigma)
+        self._fee = fee
+
         self.reset()
+
+    def reset(self) -> Tuple:
+        """Reset to initial state and returns an observation."""
+
+        self._noise.reset()
+        self._stock_prices = deque([self._noise.sample() for _ in range(90)], maxlen=90)
+        self._bought_at = None
+        self._prev_reward = 0.0
+        self._timestep = 0
+
+        return self._state()
 
     def step(self, action: int):
         """Run one timestep of the environment's dynamics.
@@ -69,7 +93,9 @@ class BuyHighSellLow(gym.Env):
         """
 
         if not self.action_space.contains(action):
-            raise error.InvalidAction()
+            raise BuyHighSellLowError(
+                f"Invalid Action, step() received action: {action}"
+            )
 
         self._timestep += 1
         current_price = max(self._noise.sample(), 0)
@@ -77,23 +103,13 @@ class BuyHighSellLow(gym.Env):
 
         reward = 0.0
         if action == Action.BUY.value and self._bought_at is None:
+            reward = self._fee
             self._bought_at = current_price
         elif action == Action.SELL.value and self._bought_at is not None:
-            reward = current_price - self._bought_at
+            reward = self._calculate_reward(current_price, self._bought_at, self._fee)
             self._bought_at = None
 
         self._prev_reward = reward
-        return self._state()
-
-    def reset(self) -> Tuple:
-        """Reset to initial state and returns an observation."""
-
-        self._noise.reset()
-        self._stock_prices = deque([self._noise.sample() for _ in range(90)], maxlen=90)
-        self._bought_at = None
-        self._prev_reward = 0.0
-        self._timestep = 0
-
         return self._state()
 
     def render(self, mode: str = "human") -> None:
@@ -105,12 +121,13 @@ class BuyHighSellLow(gym.Env):
         texts = []
         texts.append(f"{self._timestep}.")
         texts.append(
-            f"90d avg: {self._rolling_average(90):.3f} "
-            f"7d avg: {self._rolling_average(7):.3f}."
+            f"90d avg: {right_average(self._stock_prices, 90):.3f} "
+            f"30d avg: {right_average(self._stock_prices, 30):.3f} "
+            f"7d avg: {right_average(self._stock_prices, 7):.3f} "
         )
         if self._bought_at is not None:
             texts.append(f"Bought at {self._bought_at:.3f}.")
-        elif self._prev_reward > 0.0:
+        elif self._prev_reward != 0.0:
             texts.append(f"Sold with profit of {self._prev_reward:.3f}.")
         else:
             texts.append("No stocks.")
@@ -119,9 +136,8 @@ class BuyHighSellLow(gym.Env):
 
     def seed(self, value) -> int:
         """Set seed for reproducible randomness."""
-
-        self.np_random, seed = seeding.np_random(value)
-        return seed
+        self._noise.seed(value)
+        return value
 
     def _state(self) -> Tuple:
         """Return the state tuple."""
@@ -131,16 +147,18 @@ class BuyHighSellLow(gym.Env):
         else:
             bought_at = 0.0
         state = ([bought_at], list(self._stock_prices))
-        assert self.observation_space.contains(state), (
-            "The state is not within the observations space, "
-            "try adjusting noise hyperparameters"
-        )
+        if not self.observation_space.contains(state):
+            raise BuyHighSellLowError(
+                "The state is not within the observations space, "
+                "try adjusting noise hyperparameters"
+            )
         return (state, self._prev_reward, False, {})
 
-    def _rolling_average(self, days: int = 90) -> float:
-        """Calculate stock prices rolling average of n days."""
+    def _calculate_reward(
+        self, new_price: float, old_price: float, fee: float = 0.0
+    ) -> float:
+        """Calculate the reward for selling stocks.
 
-        q = self._stock_prices
-        if not 0 < days <= len(q):
-            raise ValueError("Invalid value for rolling average")
-        return sum(itertools.islice(q, len(q) - days, len(q))) / days
+        The reward is the percentage of change minus a fee.
+        """
+        return (new_price - old_price) / old_price - fee
