@@ -21,7 +21,8 @@
         "venv": true,
         "*.egg-info": true,
         ".coverage": true,
-        "build": true
+        "build": true,
+        "**/.ipynb_checkpoints": true
     },
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true

@@ -41,3 +41,4 @@ clean:
 	@rm -r .pytest_cache
 	@rm -rf build
 	@rm -rf dist
+	@rm -rf `find -type d -name .ipynb_checkpoints -not -path "./venv/*"`
