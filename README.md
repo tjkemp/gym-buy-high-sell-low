@@ -6,7 +6,7 @@
 
 *Gym Buy High Sell Low is* an OpenAI Gym simulated stock market environment that allows training agents to do favorable trades on a hypothetical stock market. Please, don't use this for serious purposes. The goal for this project is personal learning. I feel trying to beat the stock market is a rite of passage when you're getting into reinforcement learning.
 
-Obviously, "buy high, sell low" is an attempt at humour and obviously a horrible way to do trading.
+Obviously, "buy high, sell low" is an attempt at humour and a horrible way to do trading.
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ pip install -e .
 
 After installing the package to create an instance of the environment first import both `gym_bhsl` and OpenAI's `gym` package:
 
-```
+```python
 >>> import gym_bhsl
 >>> import gym
 >>> env = gym.make('BuyHighSellLow-v0')
@@ -45,7 +45,7 @@ The environment instance implements the usual OpenAI Gym environment methods.
 
 To see the observation space and the action space of the environment, use the `env.observation_space` and `env.action_space` properties:
 
-```
+```python
 >>> env.observation_space
 Tuple(Box(0.0, 100.0, (1,), float32), Box(0.0, 100.0, (90,), float32))
 
@@ -59,7 +59,7 @@ The action space is a discrete space of size 3. Integer `0` means hold/wait, `1`
 
 `render()` prints out the current state of the environment in a simplified human readable format.
 
-```
+```python
 > env.reset()
 > env.render()
 0. 90d avg: 9.224 7d avg: 8.857. No stocks. Current price 8.192.
@@ -75,7 +75,7 @@ The reward is the profit/loss made from the last trade in percentage. Sell actio
 
 ## The simulation
 
-The stock market is simulated as an Ornstein-Uhlenbeck process. The process is a random walk with a constant mean and a constant standard deviation. At the start of a task the process is initialized with 90 timesteps of random stock price and the price is updated after each timestep.
+The stock market is simulated as an Ornstein-Uhlenbeck process. The process is a random walk with a constant mean and a constant standard deviation. At the start of a new task (or at `reset()`) the process is initialized with 90 timesteps of random stock price and the price is updated after each timestep.
 
 ## Author
 

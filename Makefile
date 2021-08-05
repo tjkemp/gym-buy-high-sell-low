@@ -25,8 +25,8 @@ build: qa
 	@python -m build
 
 .PHONY: upload-test
-upload-test: build
-	@python -m twine upload --repository testpypi dist/*
+upload-test: clean build
+	@python -m twine upload --repository testpypi dist/*.whl
 
 .PHONY: release-prod
 release-prod:
